@@ -4,12 +4,14 @@ using System.Text;
 
 namespace CustomerAppDAL.Entities
 {
-    public class Order
+    public class CustomerAddress
     {
-        public int Id { get; set; }
-        public DateTime OrderDate { get; set; }
-        public DateTime DeliveryDate { get; set; }
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
+
+        public int AddressId { get; set; }
+        public Address Address { get; set; }
+
+
     }
 }

@@ -33,7 +33,7 @@ namespace CustomerRestAPI.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]OrderBO order)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }

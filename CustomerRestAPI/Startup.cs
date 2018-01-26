@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CustomerAppBLL;
+using CustomerAppBLL.BusinessObjects;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -34,24 +35,35 @@ namespace CustomerRestAPI
             {
                 app.UseDeveloperExceptionPage();
                 var facade = new BLLFacade();
-                facade.CustomerService.Create(new CustomerAppBLL.BusinessObjects.CustomerBO
+
+                var address = facade.AddressService.Create(new AddressBO
+                {
+                    City = "Cuiabá",
+                    Street = "Barão Melgaço",
+                    Number = "1800"
+                });
+
+                var cust = facade.CustomerService.Create(new CustomerBO
                 {
                     FirstName = "Wiliam",
                     LastName = "Buzatto",
-                    Address = "Brodway, 10"
+                    Addresses = new List<AddressBO>() { address }
                 });
-                facade.CustomerService.Create(new CustomerAppBLL.BusinessObjects.CustomerBO
+                facade.CustomerService.Create(new CustomerBO
                 {
                     FirstName = "Eduardo",
                     LastName = "Tavares",
-                    Address = "Brodway, 11"
+                    Addresses = new List<AddressBO>() { address }
                 });
 
-                facade.OrderService.Create(new CustomerAppBLL.BusinessObjects.OrderBO
-                {
-                    OrderDate = DateTime.Now.AddMonths(-1),
-                    DeliveryDate = DateTime.Now.AddMonths(1)
-                });
+                for (int i = 0; i < 10000; i++)
+                    facade.OrderService.Create(new OrderBO
+                    {
+                        OrderDate = DateTime.Now.AddMonths(-1),
+                        DeliveryDate = DateTime.Now.AddMonths(1),
+                        CustomerId = cust.Id
+                    });
+                
 
             }
 

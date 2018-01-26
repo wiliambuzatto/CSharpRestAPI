@@ -19,7 +19,9 @@ namespace CustomerAppBLL.BusinessObjects
                 return $"{FirstName} {LastName}";
             }
         }
-        public string Address { get; set; }
+
+        public List<int> AddressIds { get; set; }
+        public List<AddressBO> Addresses { get; set; }
 
     }
 }
