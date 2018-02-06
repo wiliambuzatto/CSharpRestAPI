@@ -34,35 +34,55 @@ namespace CustomerRestAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                var facade = new BLLFacade();
 
-                var address = facade.AddressService.Create(new AddressBO
-                {
-                    City = "Cuiabá",
-                    Street = "Barão Melgaço",
-                    Number = "1800"
-                });
+                /*var facade = new BLLFacade();
 
-                var cust = facade.CustomerService.Create(new CustomerBO
-                {
-                    FirstName = "Wiliam",
-                    LastName = "Buzatto",
-                    Addresses = new List<AddressBO>() { address }
-                });
-                facade.CustomerService.Create(new CustomerBO
-                {
-                    FirstName = "Eduardo",
-                    LastName = "Tavares",
-                    Addresses = new List<AddressBO>() { address }
-                });
+                var address = facade.AddressService.Create(
+                    new AddressBO() {
+                        City = "Cuiabá",
+                        Street = "Barão Melgaço",
+                        Number = "1800"
+                    });
 
-                for (int i = 0; i < 10000; i++)
+                var address2 = facade.AddressService.Create(
+                     new AddressBO()
+                     {
+                         City = "Chapada",
+                         Street = "Barão Melgaço",
+                         Number = "1800"
+                     });
+                var address3 = facade.AddressService.Create(
+                     new AddressBO()
+                     {
+                         City = "Querência",
+                         Street = "Barão Melgaço",
+                         Number = "1800"
+                     });
+
+                var cust = facade.CustomerService.Create(
+                    new CustomerBO()
+                    {
+                        FirstName = "Wiliam",
+                        LastName = "Buzatto",
+                        AddressIds = new List<int>() { address.Id, address3.Id }
+                        
+                    });
+                facade.CustomerService.Create(
+                    new CustomerBO()
+                        {
+                            FirstName = "Eduardo",
+                            LastName = "Tavares",
+                        AddressIds = new List<int>() { address.Id, address2.Id }
+                    });
+
+                for (int i = 0; i < 5; i++)
                     facade.OrderService.Create(new OrderBO
                     {
                         OrderDate = DateTime.Now.AddMonths(-1),
                         DeliveryDate = DateTime.Now.AddMonths(1),
                         CustomerId = cust.Id
                     });
+                    */
                 
 
             }

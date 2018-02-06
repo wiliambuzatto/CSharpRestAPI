@@ -12,6 +12,7 @@ namespace CustomerAppBLL.Services
     public class CustomerService : ICustomerService
     {
         CustomerConverter conv = new CustomerConverter();
+        AddressConverter aConv = new AddressConverter();
         DALFacade facade;
 
         public CustomerService(DALFacade facade)
@@ -44,7 +45,21 @@ namespace CustomerAppBLL.Services
         {
             using (var uow = facade.UnitOfWork)
             {
-                return conv.Convert(uow.CustomerRepository.Get(Id));
+                //1. Get and convert the Customer
+                var cust = conv.Convert(uow.CustomerRepository.Get(Id));
+                //2. Get All related address from AddressRepository using addressIds
+                /*cust.Addresses = cust.AddressIds?
+                                .Select(id => aConv.Convert(uow.AddressRepository.Get(id)))
+                                .ToList();*/
+
+
+                cust.Addresses = uow.AddressRepository.GetAllById(cust.AddressIds)
+                                    .Select(a => aConv.Convert(a))
+                                    .ToList();
+                //var addresses = uow.AddressRepository.Get()
+                //3. Convert and Add the Address to the CustomerBO
+                //4. Return the Customer
+                return cust;
             }
         }
 
@@ -72,7 +87,21 @@ namespace CustomerAppBLL.Services
                 var customerUpdated = conv.Convert(cust);
                 customerFromDb.FirstName = customerUpdated.FirstName;
                 customerFromDb.LastName = customerUpdated.LastName;
-                customerFromDb.Addresses = customerUpdated.Addresses;
+                //customerFromDb.Addresses = customerUpdated.Addresses;
+
+                //1. Remover todos endereços, exeto o "antigo" que iremos manter. Evitar o problema do vinculo ()
+                customerFromDb.Addresses.RemoveAll(ca => !customerUpdated.Addresses.Exists(
+                                                                                    a => a.AddressId == ca.AddressId &&
+                                                                                    a.CustomerId == ca.CustomerId));
+                //2. Remover todos os Ids que já estão no banco, vindo de customerFromDb
+                customerUpdated.Addresses.RemoveAll(ca => customerFromDb.Addresses.Exists(
+                                                                                a => a.AddressId == ca.AddressId &&
+                                                                                a.CustomerId == ca.CustomerId));
+                //3. Adicionar o novo CustomerAddress que ainda não estão no banco
+                customerFromDb.Addresses.AddRange(
+                        customerUpdated.Addresses
+                    );
+
                 uow.Complete();
                 return conv.Convert(customerFromDb);
             }

@@ -2,13 +2,14 @@
 using CustomerAppDAL.Context;
 using System.Linq;
 using CustomerAppDAL.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CustomerAppDAL.Repositories
 {
-    class CustomerRepositoryEFMemory : ICustomerRepository
+    class CustomerRepository : ICustomerRepository
     {
         CustomerAppContext _context;
-        public CustomerRepositoryEFMemory(CustomerAppContext context)
+        public CustomerRepository(CustomerAppContext context)
         {
             _context = context;
         }
@@ -27,12 +28,12 @@ namespace CustomerAppDAL.Repositories
 
         public Customer Get(int Id)
         {
-            return _context.Customers.FirstOrDefault(x => x.Id == Id);
+            return _context.Customers.Include(a => a.Addresses).FirstOrDefault(x => x.Id == Id);
         }
 
         public List<Customer> GetAll()
         {
-            return _context.Customers.ToList();
+            return _context.Customers.Include(a => a.Addresses).ToList();
         }
     }
 }

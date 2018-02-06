@@ -34,9 +34,15 @@ namespace CustomerAppBLL.Converters
             return new CustomerBO()
             {
                 Id = cust.Id,
+                /*Addresses = cust.Addresses.Select(a => new AddressBO() {
+                    Id = a.CustomerId,
+                    City = a.Address?.City,
+                    Number = a.Address?.Number,
+                    Street = a.Address?.Street
+                }).ToList(),*/
+                AddressIds = cust.Addresses?.Select(a => a.AddressId).ToList(),
                 FirstName = cust.FirstName,
-                LastName = cust.LastName,
-                AddressIds = cust.Addresses?.Select(a => a.AddressId).ToList()
+                LastName = cust.LastName
             };
         }
     }
